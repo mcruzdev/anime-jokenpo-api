@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Req,
   Res,
   UploadedFile,
@@ -47,7 +48,7 @@ export class UsersController {
     });
   }
 
-  @Post(':id/image')
+  @Put(':id/image')
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
