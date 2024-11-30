@@ -97,3 +97,20 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Creating the sqlite3 database
+
+```shell
+sqlite3
+```
+
+```sql
+CREATE TABLE users (
+  id UUID PRIMARY KEY,
+  username VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  image TEXT DEFAULT 'default.png',
+  score INTEGER DEFAULT 0
+);
+```

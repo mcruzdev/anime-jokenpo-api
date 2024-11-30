@@ -5,7 +5,15 @@ import { Column, Table, Model } from 'sequelize-typescript';
   timestamps: false,
 })
 export class User extends Model {
-  @Column
+  @Column({
+    primaryKey: true,
+    autoIncrement: false,
+  })
+  id: string;
+
+  @Column({
+    unique: true,
+  })
   username: string;
 
   @Column
@@ -16,4 +24,9 @@ export class User extends Model {
 
   @Column
   image: string;
+
+  @Column({
+    defaultValue: 0,
+  })
+  score: number;
 }
