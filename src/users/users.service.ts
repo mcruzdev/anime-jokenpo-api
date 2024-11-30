@@ -25,6 +25,14 @@ export class UsersService {
     return Promise.resolve(userId);
   }
 
+  async findByUsername(username: string) {
+    return await this.repository.findOne({
+      where: {
+        username: username,
+      },
+    });
+  }
+
   async findById(id: string) {
     const user = await this.repository.findOne({
       where: {
@@ -33,6 +41,10 @@ export class UsersService {
     });
 
     return user;
+  }
+
+  async findAll() {
+    return await this.repository.findAll();
   }
 
   async updateImage(id: string) {

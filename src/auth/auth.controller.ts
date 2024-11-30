@@ -1,10 +1,10 @@
 import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { InjectModel } from '@nestjs/sequelize';
-import { randomUUID } from 'crypto';
 
 import { User } from 'src/model/user.model';
 import { AuthService } from './auth.service';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
 export class AuthController {
@@ -12,18 +12,29 @@ export class AuthController {
     @InjectModel(User)
     private readonly userModel: typeof User,
     private readonly authService: AuthService,
+    private readonly userService: UsersService,
   ) {}
 
   @Post('sign-up')
   async ignUp(@Res() res: Response, @Body() req: SignUpRequest) {
-    await this.userModel.create({
-      id: randomUUID().toString(),
-      username: req.username,
-      password: req.password,
+    const existentUser = await this.userService.findByUsername(req.username);
+    if (existentUser) {
+      return res.status(HttpStatus.CONFLICT).json({
+        title: 'Conflict',
+        message: 'This username is already in use',
+      });
+    }
+
+    const userId = await this.userService.createUser({
       name: req.name,
+      password: req.password,
+      username: req.username,
     });
 
-    return res.status(HttpStatus.CREATED).send();
+    return res
+      .status(HttpStatus.CREATED)
+      .setHeader('Location', `/users/${userId}`)
+      .send();
   }
 
   @Post('sign-in')
@@ -36,6 +47,7 @@ export class AuthController {
 
     if (!user) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
+        title: 'Unauthorized',
         message: 'Invalid username or password',
       });
     }
