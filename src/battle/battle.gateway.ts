@@ -57,10 +57,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.clients.set(user.id, client);
 
     console.log(`user with ID ${sub} connected with client ID ${client.id}`);
-
-    return {
-      connected: 'ok',
-    };
   }
 
   handleDisconnect(client: any) {
@@ -84,7 +80,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client: any,
     payload: { choice: string; battleId: string; username: string },
   ) {
-    console.log(`authorized???`, client.data.authorized);
     const authorization = client.handshake.headers['authorization'] as string;
 
     if (!authorization) {
@@ -181,8 +176,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('join-queue')
   handleQueueEvent(client: any): void {
     const authorization = client.handshake.headers['authorization'] as string;
-
-    console.log(`authorized???`, client.data.authorized);
 
     const [, token] = authorization.split(' ');
 

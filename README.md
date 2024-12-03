@@ -98,11 +98,19 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
+## What is expected?
+
+![img](final.png)
+
 ## Creating the sqlite3 database
 
+Create the database:
+
 ```shell
-sqlite3
+sqlite3 anime-jokenpo.db
 ```
+
+Create the table:
 
 ```sql
 CREATE TABLE users (
@@ -114,3 +122,49 @@ CREATE TABLE users (
   score INTEGER DEFAULT 0
 );
 ```
+
+## How-to use the WebSocket events
+
+### Server receives:
+
+Event name: `join-queue`
+
+---
+
+Event name: `battle-choice`
+
+Payload:
+
+- `choice`(`ROCK|SCISSORS|PAPER`)
+
+- `username`
+
+- `battleId`
+
+### Server emits
+
+Event name: `finished`
+
+Payload:
+
+- `result`
+
+---
+
+Event name: `player-in-queue`
+
+Payload:
+
+- `status`
+
+---
+
+Event name: `waiting-for-choice`
+
+Payload:
+
+- `status`
+- `battle`
+  - `id`
+  - `player1`
+  - `player2`
