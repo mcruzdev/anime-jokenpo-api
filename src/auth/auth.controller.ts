@@ -53,6 +53,34 @@ export class SignInResponse {
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZDYwM2MxOS1kOWQ0LTQ0ZWEtYTg4Yy0xODA1ZjAwODBhMDAiLCJ1c2VybmFtZSI6Imdva3UiLCJpYXQiOjE3MzI5ODc2MzV9.Ea3n0FyKoy1Y09bHSe9e2RJTNFvblTPxOc-EgB3mDZ0',
   })
   accessToken: string;
+  user: UserSignInResponse;
+}
+
+export class UserSignInResponse {
+  @ApiProperty({
+    type: 'string',
+    name: 'id',
+    example: '5d603c19-d9d4-44ea-a88c-1805f0080a02',
+  })
+  id: string;
+  @ApiProperty({
+    type: 'string',
+    name: 'name',
+    example: 'Son Goku',
+  })
+  name: string;
+  @ApiProperty({
+    type: 'string',
+    name: 'username',
+    example: 'goku',
+  })
+  username: string;
+  @ApiProperty({
+    type: 'string',
+    name: 'image',
+    example: 'images/default.png',
+  })
+  image: string;
 }
 
 @Controller('auth')
@@ -111,8 +139,9 @@ export class AuthController {
       accessToken: token,
       user: {
         id: user.id,
+        name: user.name,
         username: user.username,
-        image: user.image,
+        image: user.image || 'images/default.png',
       },
     } as SignInResponse);
   }

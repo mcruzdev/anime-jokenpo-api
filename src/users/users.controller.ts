@@ -16,23 +16,27 @@ import { Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { writeFile } from 'fs/promises';
 import { AuthService } from 'src/auth/auth.service';
-import { ApiHeader } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiProduces } from '@nestjs/swagger';
 
+@ApiConsumes('application/json')
+@ApiProduces('application/json')
 @Controller('users')
-@UseGuards(AuthGuard)
 export class UsersController {
   constructor(
     private readonly userService: UsersService,
     private readonly authService: AuthService,
   ) {}
 
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer {token}',
-  })
   @Get(':id')
   async getById(@Res() res: Response, @Param('id') id: string) {
     const user = await this.userService.findById(id);
+
+    if (!user) {
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      });
+    }
+
     return res.status(HttpStatus.OK).json({
       id: user.id,
       username: user.username,
@@ -46,18 +50,27 @@ export class UsersController {
       return {
         id: user.id,
         username: user.username,
-        image: `images/${user.image || 'default.png'}`,
+        image: `images/${user.image || '/default.png'}`,
         score: user.score,
       };
     });
   }
 
-  @ApiHeader({
-    name: 'Authorization',
-    description: 'Bearer {token}',
-  })
+  @UseGuards(AuthGuard)
+  @ApiConsumes('multipart/form-data')
   @Put(':id/image')
   @UseInterceptors(FileInterceptor('file'))
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
     @Param('id') id: string,

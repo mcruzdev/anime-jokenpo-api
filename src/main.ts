@@ -13,6 +13,7 @@ async function bootstrap() {
     .setTitle('Anime Jokenpo API')
     .setDescription('Jokenpo Game')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
