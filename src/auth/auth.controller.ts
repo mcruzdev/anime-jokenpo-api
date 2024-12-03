@@ -5,6 +5,55 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/model/user.model';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class SignUpRequest {
+  @ApiProperty({
+    type: 'string',
+    name: 'username',
+    example: 'goku',
+  })
+  username: string;
+
+  @ApiProperty({
+    type: 'string',
+    name: 'password',
+    example: 'secure@password',
+  })
+  password: string;
+
+  @ApiProperty({
+    type: 'string',
+    name: 'name',
+    example: 'Son Goku',
+  })
+  name: string;
+}
+
+export class SignInRequest {
+  @ApiProperty({
+    type: 'string',
+    name: 'username',
+    example: 'goku',
+  })
+  username: string;
+  @ApiProperty({
+    type: 'string',
+    name: 'password',
+    example: 'secure@password',
+  })
+  password: string;
+}
+
+export class SignInResponse {
+  @ApiProperty({
+    type: 'string',
+    name: 'accessToken',
+    example:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZDYwM2MxOS1kOWQ0LTQ0ZWEtYTg4Yy0xODA1ZjAwODBhMDAiLCJ1c2VybmFtZSI6Imdva3UiLCJpYXQiOjE3MzI5ODc2MzV9.Ea3n0FyKoy1Y09bHSe9e2RJTNFvblTPxOc-EgB3mDZ0',
+  })
+  accessToken: string;
+}
 
 @Controller('auth')
 export class AuthController {
@@ -42,6 +91,7 @@ export class AuthController {
     const user = await this.userModel.findOne({
       where: {
         username: req.username,
+        password: req.password,
       },
     });
 
@@ -66,18 +116,4 @@ export class AuthController {
       },
     } as SignInResponse);
   }
-}
-
-interface SignUpRequest {
-  username: string;
-  password: string;
-  name: string;
-}
-interface SignInRequest {
-  username: string;
-  password: string;
-}
-
-interface SignInResponse {
-  accessToken: string;
 }

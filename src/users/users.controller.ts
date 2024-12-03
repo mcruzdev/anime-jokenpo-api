@@ -3,7 +3,6 @@ import {
   Get,
   HttpStatus,
   Param,
-  Post,
   Put,
   Req,
   Res,
@@ -17,6 +16,7 @@ import { Request, Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { writeFile } from 'fs/promises';
 import { AuthService } from 'src/auth/auth.service';
+import { ApiHeader } from '@nestjs/swagger';
 
 @Controller('users')
 @UseGuards(AuthGuard)
@@ -26,6 +26,10 @@ export class UsersController {
     private readonly authService: AuthService,
   ) {}
 
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'Bearer {token}',
+  })
   @Get(':id')
   async getById(@Res() res: Response, @Param('id') id: string) {
     const user = await this.userService.findById(id);
@@ -48,6 +52,10 @@ export class UsersController {
     });
   }
 
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'Bearer {token}',
+  })
   @Put(':id/image')
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
