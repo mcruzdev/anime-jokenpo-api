@@ -41,6 +41,8 @@ export class UsersController {
       id: user.id,
       username: user.username,
       image: user.image || 'images/default.png',
+      name: user.name,
+      score: user.score,
     });
   }
 

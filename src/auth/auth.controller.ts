@@ -7,6 +7,16 @@ import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { ApiProperty } from '@nestjs/swagger';
 
+export class ValidateTokenRequest {
+  @ApiProperty({
+    type: 'string',
+    name: 'token',
+    example:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZDYwM2MxOS1kOWQ0LTQ0ZWEtYTg4Yy0xODA1ZjAwODBhMDAiLCJ1c2VybmFtZSI6Imdva3UiLCJpYXQiOjE3MzI5ODc2MzV9.Ea3n0FyKoy1Y09bHSe9e2RJTNFvblTPxOc-EgB3mDZ0',
+  })
+  token: string;
+}
+
 export class SignUpRequest {
   @ApiProperty({
     type: 'string',
@@ -144,5 +154,14 @@ export class AuthController {
         image: user.image || 'images/default.png',
       },
     } as SignInResponse);
+  }
+
+  @Post('validate')
+  async validate(@Res() res: Response, @Body() req: ValidateTokenRequest) {
+    const verified = this.authService.verifyToken(req.token);
+
+    res.status(HttpStatus.OK).send({
+      valid: verified,
+    });
   }
 }

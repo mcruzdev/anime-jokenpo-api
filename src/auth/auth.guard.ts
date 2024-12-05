@@ -12,6 +12,8 @@ export class AuthGuard implements CanActivate {
 
     const authorization = request.headers['authorization'];
 
+    console.log('authorization ', authorization);
+
     if (!authorization) {
       return;
     }
