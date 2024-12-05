@@ -52,7 +52,7 @@ export class UsersController {
       return {
         id: user.id,
         username: user.username,
-        image: `images/${user.image || '/default.png'}`,
+        image: `images/${user.image || 'default.png'}`,
         score: user.score,
       };
     });
